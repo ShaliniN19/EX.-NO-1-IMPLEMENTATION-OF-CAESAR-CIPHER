@@ -20,26 +20,64 @@ STEP-5: Display the cipher text obtained above.
 ## PROGRAM:
 ```
 #include <stdio.h>
-int main()
-{
-  char text[100];
-  int key, i;
-  printf("Enter text: ");
-  scanf("%s", text);
-  printf("Enter key: ");
-  scanf("%d", &key);
-  for(i = 0; text[i] != '\0'; i++)
-  {
-   text[i] = text[i] + key;
-  }
-  printf("Cipher Text: %s", text);
-  return 0;
+#include <string.h>
+#include <ctype.h>
+
+void encrypt(char text[], char key[]) {
+    int i, j = 0;
+    int keyLen = strlen(key);
+
+    for (i = 0; text[i] != '\0'; i++) {
+        if (isalpha(text[i])) {
+            char base = isupper(text[i]) ? 'A' : 'a';
+            text[i] = ((text[i] - base) +
+                       (toupper(key[j % keyLen]) - 'A')) % 26 + base;
+            j++;
+        }
+    }
+}
+
+void decrypt(char text[], char key[]) {
+    int i, j = 0;
+    int keyLen = strlen(key);
+
+    for (i = 0; text[i] != '\0'; i++) {
+        if (isalpha(text[i])) {
+            char base = isupper(text[i]) ? 'A' : 'a';
+            text[i] = ((text[i] - base) -
+                       (toupper(key[j % keyLen]) - 'A') + 26) % 26 + base;
+            j++;
+        }
+    }
+}
+
+int main() {
+    char text[1000], key[100];
+
+    printf("Enter text: ");
+    fgets(text, sizeof(text), stdin);
+    text[strcspn(text, "\n")] = '\0';
+
+    printf("Enter key: ");
+    scanf("%s", key);
+
+    char encrypted[1000];
+    strcpy(encrypted, text);
+
+    encrypt(encrypted, key);
+    printf("Encrypted Text: %s\n", encrypted);
+
+    decrypt(encrypted, key);
+    printf("Decrypted Text: %s\n", encrypted);
+
+    return 0;
 }
 ```
 
 ## OUTPUT:
 
-<img width="773" height="871" alt="image" src="https://github.com/user-attachments/assets/2b42c72c-8564-4cdc-8e4d-a485922d0301" />
+<img width="1258" height="762" alt="image" src="https://github.com/user-attachments/assets/820e9126-6560-4a8f-bcf8-ef04d2facd34" />
+
 
 ## RESULT :
  Thus the implementation of ceasar cipher had been executed successfully.
